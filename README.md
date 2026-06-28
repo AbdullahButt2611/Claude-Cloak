@@ -36,8 +36,8 @@ icons are committed under `assets/`.
 
 - Click the toolbar icon to open the popup.
 - Use the "Hide project chats" switch to turn hiding on or off.
-- The status line shows how many project chats are currently hidden in the
-  active Claude tab.
+- A status line with a small indicator shows how many project chats are
+  currently hidden in the active Claude tab.
 - If a hidden chat ever reappears (for example after a long session), reload the
   Claude tab. The popup hint says the same thing.
 
@@ -111,34 +111,7 @@ That is the full list. No data leaves your browser. No third-party servers are
 contacted. The font is bundled locally rather than loaded from Google Fonts, so
 even the popup makes no outbound request.
 
-## Development and testing
-
-Automated tests use Playwright and live under `tests/`. They are tooling and are
-not part of the shipped extension.
-
-```bash
-npm install
-npx playwright install chromium
-npm test
-```
-
-The tests load the unpacked extension into a persistent Chromium context (using
-the new headless mode, which supports extensions), open the popup at its real
-extension URL so genuine `chrome.*` APIs are present, and check that:
-
-- the extension loads with no manifest or console errors,
-- the popup renders its controls,
-- the toggle defaults to on, flips the stored flag, and persists across reopens,
-- the switch is fully keyboard operable,
-- the status line is a polite live region.
-
-Screenshots of both states are written to `test-results/`.
-
-The manifest includes a fixed `key`, which gives the extension a stable id
-across installs. That makes the popup URL deterministic for the tests and keeps
-your stored settings stable if you reload the unpacked extension.
-
-### Manual verification (logged-in behavior)
+## Verifying it works
 
 A full end-to-end test of the hiding behavior needs an authenticated Claude
 session, which cannot run unattended. Verify it by hand:
@@ -164,13 +137,11 @@ src/
   injected.js        main-world script: intercepts fetch/XHR and history
   content.js         isolated-world script: owns UUIDs, hiding, observer
   popup.html         popup markup
-  popup.css          popup styles (self-hosted Poppins, coral accent)
+  popup.css          popup styles (self-hosted Poppins, coral accent, dark theme)
   popup.js           popup logic (toggle, live count)
 assets/
   fonts/             self-hosted Poppins woff2 files (400, 500, 600)
   icons/             icon-16.png, icon-48.png, icon-128.png
-tests/
-  popup.spec.js      Playwright tests (not shipped)
 ```
 
 ## License
