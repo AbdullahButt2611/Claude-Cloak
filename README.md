@@ -69,7 +69,9 @@ html.claude-cloak-on [data-claude-cloak="hidden"] { display: none !important; }
 ```
 
 The content script marks project rows with `data-claude-cloak="hidden"` and
-toggles the root class from a cached flag. Because the rule is already present,
+toggles the root class from a cached flag. The marking is scoped to the sidebar
+only, so the chat list shown on a Project's own page stays fully visible. The
+goal is only to tidy the sidebar. Because the rule is already present,
 toggling is instant and there is no flash of project chats appearing before
 they are hidden. The `MutationObserver` on the sidebar is debounced, the enabled
 flag is cached in memory and updated through `chrome.storage.onChanged`, and the
@@ -86,6 +88,12 @@ observer re-attaches itself if Claude replaces the sidebar node.
   runaway requests. The `starred=false` filter is why starred chats are never
   collected and therefore never hidden.
 - A chat belongs to a project when its `project_uuid` is truthy.
+- New or just-opened chats: the list endpoint returns an array, but creating a
+  chat (POST) or opening one (GET `.../chat_conversations/{uuid}`) returns a
+  single conversation object. The interceptor handles both shapes, so a chat
+  created inside a project is hidden right away instead of waiting for a reload.
+  As a safety net, navigating to a chat also verifies that one conversation
+  directly (once per chat) in case the create or open response is ever missed.
 
 If Claude changes an endpoint, a parameter, or the sidebar markup, prefer
 updating the small set of constants and selectors at the top of `content.js`
