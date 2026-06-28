@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Cloak</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup" role="main">
+      <header class="header">
+        <img
+          class="header__icon"
+          src="../assets/icons/icon-48.png"
+          alt=""
+          width="28"
+          height="28"
+        />
+        <h1 class="header__title">Claude Cloak</h1>
+      </header>
+
+      <div class="control">
+        <label class="control__label" for="hide-toggle">Hide project chats</label>
+
+        <!-- Native checkbox keeps full keyboard and screen-reader support; the
+             visual track and thumb are drawn in CSS from this input's state. -->
+        <span class="switch">
+          <input
+            class="switch__input"
+            type="checkbox"
+            id="hide-toggle"
+            role="switch"
+            aria-checked="true"
+            checked
+          />
+          <span class="switch__track" aria-hidden="true">
+            <span class="switch__thumb"></span>
+          </span>
+        </span>
+      </div>
+
+      <p class="status" id="status" aria-live="polite">Checking the sidebar...</p>
+
+      <p class="hint">Reload Claude if a hidden chat reappears.</p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
