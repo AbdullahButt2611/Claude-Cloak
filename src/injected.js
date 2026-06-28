@@ -26,20 +26,28 @@
     window.postMessage({ source: SOURCE, type: "navigation" }, "*");
   }
 
-  // Pull the uuids of project-owned chats out of a chat_conversations payload.
-  // Claude returns an array of conversation records; a record belongs to a
-  // project when project_uuid is truthy. We stay defensive about the shape so a
-  // future API change degrades to "found nothing" rather than throwing.
-  function extractProjectUuids(data) {
-    const records = Array.isArray(data)
-      ? data
-      : Array.isArray(data && data.conversations)
-        ? data.conversations
-        : null;
-    if (!records) return [];
+  // Normalise the many shapes a chat_conversations response can take into a flat
+  // list of records. The list endpoint returns an array, but creating a chat
+  // (POST) or opening one (GET .../chat_conversations/{uuid}) returns a single
+  // conversation object. Missing that single-object case is why a chat created
+  // inside a project stayed visible until a full reload re-ran the list seed.
+  function toRecords(data) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.conversations)) return data.conversations;
+    if (data && data.conversation && typeof data.conversation === "object") {
+      return [data.conversation];
+    }
+    if (data && typeof data === "object" && data.uuid) return [data];
+    return [];
+  }
 
+  // Pull the uuids of project-owned chats out of a chat_conversations payload.
+  // A record belongs to a project when project_uuid is truthy. We stay defensive
+  // about the shape so a future API change degrades to "found nothing" rather
+  // than throwing.
+  function extractProjectUuids(data) {
     const uuids = [];
-    for (const record of records) {
+    for (const record of toRecords(data)) {
       if (record && record.uuid && record.project_uuid) {
         uuids.push(record.uuid);
       }

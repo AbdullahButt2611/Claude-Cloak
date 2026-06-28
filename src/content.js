@@ -33,6 +33,9 @@
 
   // Module state.
   const projectUuids = new Set();
+  // Chats we have already checked directly, so the navigation safety net does
+  // not refetch the same conversation on every route change.
+  const checkedChatUuids = new Set();
   let enabled = ENABLED_DEFAULT;
   let hiddenCount = 0;
   let orgId = null;
@@ -73,13 +76,27 @@
   // mark the project-owned ones. Starred chats never enter projectUuids (the
   // seed fetch uses starred=false and the API only tags real project chats), so
   // they are never marked here.
+  //
+  // The scan is scoped to the sidebar only. The project page lists its own chats
+  // in the main content area, and those should stay visible; we only want to
+  // tidy the sidebar. Scoping the marking here (not just the CSS) keeps those
+  // main-content rows untouched.
   function applyHide() {
     const root = document.documentElement;
     if (enabled) root.classList.add(ROOT_CLASS);
     else root.classList.remove(ROOT_CLASS);
 
+    const scope =
+      observedSidebar && observedSidebar.isConnected
+        ? observedSidebar
+        : findSidebar();
+    if (!scope) {
+      hiddenCount = 0;
+      return;
+    }
+
     let count = 0;
-    const links = document.querySelectorAll('a[href^="/chat/"]');
+    const links = scope.querySelectorAll('a[href^="/chat/"]');
     for (const link of links) {
       const uuid = uuidFromHref(link.getAttribute("href"));
       if (!uuid) continue;
@@ -195,6 +212,44 @@
     }
   }
 
+  // Read the chat uuid from the current path, if we are on a chat route.
+  function currentChatUuid() {
+    const match = location.pathname.match(/\/chat\/([^/?#]+)/);
+    return match ? match[1] : null;
+  }
+
+  // Safety net for a freshly created or freshly opened chat. The main path is
+  // injected.js reading the create/open response, but if that response is ever
+  // missed (timing, a cached client-side navigation with no network), this
+  // checks the open chat directly so a project chat does not linger visible
+  // until a reload. Each chat is checked at most once.
+  async function verifyCurrentChat() {
+    const uuid = currentChatUuid();
+    if (!uuid || projectUuids.has(uuid) || checkedChatUuids.has(uuid)) return;
+    checkedChatUuids.add(uuid);
+
+    if (!orgId) orgId = await resolveOrgId();
+    if (!orgId) return;
+
+    try {
+      const res = await fetch(
+        "https://claude.ai/api/organizations/" +
+          orgId +
+          "/chat_conversations/" +
+          uuid,
+        { credentials: "include" }
+      );
+      if (!res.ok) return;
+      const convo = await res.json();
+      if (convo && convo.project_uuid) {
+        projectUuids.add(uuid);
+        scheduleHide();
+      }
+    } catch (err) {
+      console.debug(LOG, "verify current chat failed", err);
+    }
+  }
+
   // messaging from injected.js
   // Accept only same-window messages tagged with our source. injected.js sends
   // exactly two shapes: project-chats (uuids) and navigation.
@@ -213,9 +268,11 @@
       }
       if (added) scheduleHide();
     } else if (data.type === "navigation") {
-      // A client-side route changed; re-apply hiding for the new view. If the
-      // set looks empty we may have navigated into a fresh org, so re-seed.
+      // A client-side route changed (for example a new chat created inside a
+      // project). Re-apply hiding, verify the chat we landed on, and re-seed if
+      // the set looks empty (we may have switched into a fresh org).
       scheduleHide();
+      verifyCurrentChat();
       if (projectUuids.size === 0) seedProjectUuids();
     }
   }
@@ -312,6 +369,7 @@
     waitForSidebarAndAttach();
     watchForReattach();
     seedProjectUuids();
+    verifyCurrentChat();
   }
 
   init();
