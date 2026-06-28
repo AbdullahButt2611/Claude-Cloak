@@ -62,3 +62,7 @@ scratch/
 
 # Claude
 .claude/
+
+
+# Playwright
+playwright.config.js
