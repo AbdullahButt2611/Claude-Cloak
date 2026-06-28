@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Package manager logs and lockfile noise (keep your chosen lockfile, ignore the others)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+
+# Build output and packaged extension
+dist/
+build/
+out/
+*.zip
+*.crx
+*.pem
+
+# Playwright and test artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
+.last-run.json
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs and temp
+*.log
+tmp/
+temp/
+.cache/
+
+# Optional: local notes you do not want public
+NOTES.local.md
+scratch/
