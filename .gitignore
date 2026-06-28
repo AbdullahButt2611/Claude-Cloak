@@ -58,3 +58,7 @@ temp/
 # Optional: local notes you do not want public
 NOTES.local.md
 scratch/
+
+
+# Claude
+.claude/
