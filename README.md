@@ -8,17 +8,7 @@ visible.
 It collects no data and makes no network requests beyond Claude's own
 same-origin API. There is no tracking, no analytics, and no remote code.
 
-<p align="center">
-  <a href="assets/images/demo.mp4">
-    <img
-      src="assets/images/demo-thumb.png"
-      alt="Watch the Claude Cloak demo"
-      width="640"
-    />
-  </a>
-</p>
-
-<p align="center"><em><a href="assets/images/demo.mp4">Watch the demo</a></em></p>
+![Claude Cloak demo](assets/images/demo.gif)
 
 ## What it does
 
