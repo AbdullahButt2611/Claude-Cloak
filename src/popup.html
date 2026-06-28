@@ -9,18 +9,26 @@
   <body>
     <main class="popup" role="main">
       <header class="header">
-        <img
-          class="header__icon"
-          src="../assets/icons/icon-48.png"
-          alt=""
-          width="28"
-          height="28"
-        />
-        <h1 class="header__title">Claude Cloak</h1>
+        <span class="header__badge">
+          <img
+            class="header__icon"
+            src="../assets/icons/icon-128.png"
+            alt=""
+            width="26"
+            height="26"
+          />
+        </span>
+        <span class="header__text">
+          <h1 class="header__title">Claude Cloak</h1>
+          <span class="header__subtitle">Sidebar cleanup for Claude</span>
+        </span>
       </header>
 
       <div class="control">
-        <label class="control__label" for="hide-toggle">Hide project chats</label>
+        <span class="control__copy">
+          <label class="control__label" for="hide-toggle">Hide project chats</label>
+          <span class="control__desc">Keep project chats out of the sidebar</span>
+        </span>
 
         <!-- Native checkbox keeps full keyboard and screen-reader support; the
              visual track and thumb are drawn in CSS from this input's state. -->
@@ -39,9 +47,27 @@
         </span>
       </div>
 
-      <p class="status" id="status" aria-live="polite">Checking the sidebar...</p>
+      <div class="status" id="status-row">
+        <span class="status__dot" aria-hidden="true"></span>
+        <p class="status__text" id="status" aria-live="polite">
+          Checking the sidebar...
+        </p>
+      </div>
 
       <p class="hint">Reload Claude if a hidden chat reappears.</p>
+
+      <footer class="footer">
+        <span class="footer__by">Developed by</span>
+        <a
+          class="footer__link"
+          href="https://abdullahbutt2210.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="MABCORP (opens in a new tab)"
+        >
+          <img class="footer__logo" src="../assets/logo/logo.png" alt="MABCORP" />
+        </a>
+      </footer>
     </main>
 
     <script src="popup.js"></script>

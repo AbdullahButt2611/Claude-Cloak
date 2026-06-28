@@ -13,6 +13,7 @@
 
   const toggle = document.getElementById("hide-toggle");
   const status = document.getElementById("status");
+  const statusRow = document.getElementById("status-row");
 
   // Reflect the boolean in both the checkbox and its ARIA state.
   function reflectEnabled(enabled) {
@@ -21,8 +22,12 @@
   }
 
   // Compose the status line from the current count and enabled state. Kept in
-  // one place so wording stays consistent.
+  // one place so wording stays consistent. The dot lights up only when hiding is
+  // on and chats are actually being hidden.
   function renderStatus(enabled, count) {
+    const active = enabled && typeof count === "number" && count > 0;
+    statusRow.classList.toggle("is-active", active);
+
     if (count === null) {
       status.textContent = "Open a claude.ai tab to see hidden chats.";
       return;
