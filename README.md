@@ -8,6 +8,19 @@ visible.
 It collects no data and makes no network requests beyond Claude's own
 same-origin API. There is no tracking, no analytics, and no remote code.
 
+<p align="center">
+  <video
+    src="assets/images/demo.mp4"
+    controls
+    muted
+    playsinline
+    width="640"
+  >
+    Your browser does not show embedded video.
+    <a href="assets/images/demo.mp4">Watch the demo</a>.
+  </video>
+</p>
+
 ## What it does
 
 - Detects which chats belong to a Project using the `project_uuid` field from
