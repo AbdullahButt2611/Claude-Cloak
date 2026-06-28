@@ -113,6 +113,17 @@ even the popup makes no outbound request.
 
 ## Verifying it works
 
+With the toggle on, project chats (the rows with a folder icon) drop out of the
+sidebar, leaving your standalone chats:
+
+<p align="center">
+  <img
+    src="assets/images/before_after.png"
+    alt="Claude sidebar before and after: rows with a folder icon are hidden once Claude Cloak is on"
+    width="640"
+  />
+</p>
+
 A full end-to-end test of the hiding behavior needs an authenticated Claude
 session, which cannot run unattended. Verify it by hand:
 
