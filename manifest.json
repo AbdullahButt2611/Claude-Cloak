@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Cloak",
+  "version": "0.1.0",
+  "description": "Hide Project chats from your Claude sidebar with a single toggle. Private, lightweight, no data collected.",
+  "homepage_url": "https://github.com/your-org/claude-cloak",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzdI5wLxzsbQ0CfRTzt+/b+osMWZDWKKv0UdytkYxZqptv5zwjLSHgVK9y+w14yAiUNWgX/HHoXTGehfg8LCzSxcBHXGcUhdOXCO0EK0KIoPgM1agAIEZ9Ap8DCbZS11Eqr13GPCoo/3NDc8g39nw7H3YUEhRLFshavDFyrsMK7+7hZrmTXck5fn3FbtYjU2yiJwbONRqE5dJmjCxdF/3wqPddkx3Gr5XV+g5jq8TfR0cnrfF2PD3E24oF2L3BGHInd+SV8AwVRoQ2Zj9crJre1hfmOdT1Sqe/zPj4t22zd8Pv/mx/8oyQhD08FMbKUEnhXFN8vS+ZTQNzm40/meOpQIDAQAB",
+  "author": "Claude Cloak contributors",
+  "permissions": ["storage"],
+  "host_permissions": ["https://claude.ai/*"],
+  "action": {
+    "default_title": "Claude Cloak",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "48": "assets/icons/icon-48.png",
+      "128": "assets/icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon-16.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["src/injected.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["src/content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
